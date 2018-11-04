@@ -8,13 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.apps.employeetrackingl.employeetracking.R;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class IndoorFragment extends Fragment {
 
-
+    AsyncHttpClient client;
+    JSONArray jarray;
+    JSONObject jobject;
+    RequestParams params;
     public IndoorFragment() {
         // Required empty public constructor
     }
