@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.sparelogin);
         checkinternet=isNetworkAvailable();
         if(checkinternet==true)
             Toast.makeText(this, "Please check your internet connection", Toast.LENGTH_SHORT).show();
@@ -52,30 +52,30 @@ public class LoginActivity extends AppCompatActivity {
         user_mail = findViewById(R.id.editText_user_mail);
         user_password = findViewById(R.id.editText_password);
         Login = findViewById(R.id.button_log_in);
-        show_password = findViewById(R.id.button_show_password);
+       // show_password = findViewById(R.id.button_show_password);
 
 
         SharedPreferences shared = getApplicationContext().getSharedPreferences("Pref", MODE_PRIVATE);
         editor = shared.edit();
-
-        show_password.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-
-                switch ( event.getAction() ) {
-
-                    case MotionEvent.ACTION_UP:
-                        user_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                        break;
-
-                    case MotionEvent.ACTION_DOWN:
-                        user_password.setInputType(InputType.TYPE_CLASS_TEXT);
-                        break;
-
-                }
-                return true;
-            }
-        });
-
+//EYE BUTTON START
+//        show_password.setOnTouchListener(new View.OnTouchListener() {
+//            public boolean onTouch(View v, MotionEvent event) {
+//
+//                switch ( event.getAction() ) {
+//
+//                    case MotionEvent.ACTION_UP:
+//                        user_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//                        break;
+//
+//                    case MotionEvent.ACTION_DOWN:
+//                        user_password.setInputType(InputType.TYPE_CLASS_TEXT);
+//                        break;
+//
+//                }
+//                return true;
+//            }
+//        });
+// EYE BUTTON END
         user_mail.setText("monisha.sics@gmail.com");
         user_password.setText("monisha123");
 
