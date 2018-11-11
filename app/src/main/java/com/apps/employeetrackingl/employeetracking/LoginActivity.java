@@ -1,8 +1,12 @@
 package com.apps.employeetrackingl.employeetracking;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -34,12 +38,14 @@ public class LoginActivity extends AppCompatActivity {
 
     SharedPreferences.Editor editor;
 
-
+      boolean checkinternet;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        checkinternet=isNetworkAvailable();
+        if(checkinternet==true)
+            Toast.makeText(this, "Please check your internet connection", Toast.LENGTH_SHORT).show();
         client = new AsyncHttpClient();
         params = new RequestParams();
 
@@ -110,7 +116,9 @@ public class LoginActivity extends AppCompatActivity {
                               String postn = jobject1.getString("position");
                               String status = jobject1.getString("status");
 
+//auto login
 
+                              //
                             //  Toast.makeText(LoginActivity.this, ""+user_id, Toast.LENGTH_SHORT).show();
 
                               editor.putString("user_id", user_id);
@@ -120,12 +128,17 @@ public class LoginActivity extends AppCompatActivity {
                               editor.putString("status", status);
                               editor.commit();
 
+                              SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                              prefs.edit().putInt("userid", Integer.parseInt(user_id)).commit();
+
                               Intent intent=new Intent(LoginActivity.this,NavActivity.class);
                               startActivity(intent);
 
+                                finish();
+
                           }else if(s.equalsIgnoreCase("Incorrect Password")){
 
-                              Toast.makeText(LoginActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
+                              Toast.makeText(LoginActivity.this, "Incorrect Credentials", Toast.LENGTH_SHORT).show();
 
                           }
 
@@ -141,5 +154,11 @@ public class LoginActivity extends AppCompatActivity {
 
           }
       });
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

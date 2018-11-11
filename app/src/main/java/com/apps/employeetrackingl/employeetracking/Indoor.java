@@ -1,5 +1,6 @@
 package com.apps.employeetrackingl.employeetracking;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Indoor extends AppCompatActivity {
+    String status;
     TextView taskhead,taskdetailstv;
     RadioGroup rg;
     RadioButton rb;
@@ -82,12 +84,16 @@ public class Indoor extends AppCompatActivity {
 
                  SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
                  endtime = df.format(c.getTime());
-                 Toast.makeText(Indoor.this, "Ending time is "+endtime, Toast.LENGTH_SHORT).show();
+                 SimpleDateFormat dfdate = new SimpleDateFormat("yyyy-mm-dd");
+                 String currentdate=dfdate.format(c.getTime());
 
-//
-//                 Date c1 = Calendar.getInstance().getTime(); System.out.println("Current date => " + c1);
-//                 SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
-//                 String current_Date = df1.format(c);
+                 Toast.makeText(Indoor.this, "Ending time is "+endtime, Toast.LENGTH_SHORT).show();
+                 Toast.makeText(Indoor.this, "Date is "+currentdate, Toast.LENGTH_SHORT).show();
+
+
+//                 Date c1new = Calendar.getInstance().getTime(); System.out.println("Current date => " + c1new);
+//                 SimpleDateFormat df1new = new SimpleDateFormat("yyyy-MM-dd");
+//                 String current_Date = df1new.format(c);
 
 
                  // get selected radio button from radioGroup
@@ -95,44 +101,62 @@ public class Indoor extends AppCompatActivity {
 
                  // find the radiobutton by returned id
                  rb = (RadioButton) findViewById(selectedId);
+                 //..check if rb selected
+                 if (rg.getCheckedRadioButtonId() == -1)
+                 {
+                     // no radio buttons are checked
+                    // Toast.makeText(Indoor.this, "Nothing selected", Toast.LENGTH_SHORT).show();
+                     status="nothing_selected";
+                 }
+                 else
+                 {
+                     // one of the radio buttons is checked
+                      status = (String) rb.getText();
 
-                 String status= (String) rb.getText();
+                 }
+
+                 //..
+
+  //  String status = (String) rb.getText();
+
                  Toast.makeText(Indoor.this,"SELCTED RB"+
                          status, Toast.LENGTH_SHORT).show();
+if(status.equalsIgnoreCase("yes")||status.equalsIgnoreCase("no")) {
+    params.put("task_id", taskid);  //task id
+    params.put("time", endtime);     //end time
+    params.put("date", currentdate);//date
+    params.put("status", status);     //slected radiobutton
 
-                 params.put("task_id","5");  //current_Date
-                 params.put("time","11:00:00");     //user_id
-                 params.put("date","2018-10-26");
-                 params.put("status","no");     //
+    client.get(updatetaskurl, params, new AsyncHttpResponseHandler() {
+        @Override
+        public void onSuccess(String content) {
+            super.onSuccess(content);
+            try {
+                jobject = new JSONObject(content);
+                String s = jobject.getString("Status");
+                if (s.equalsIgnoreCase("success")) {
+                    Toast.makeText(Indoor.this, "Task Updated", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Indoor.this,NavActivity.class));
+                } else if (s.equalsIgnoreCase("Already Updated")) {
+                    Toast.makeText(Indoor.this, "Task Already Updated!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Indoor.this,NavActivity.class));
 
-                 client.get(updatetaskurl,params,new AsyncHttpResponseHandler(){
-                     @Override
-                     public void onSuccess(String content) {
-                         super.onSuccess(content);
-                         try{
-                             jobject = new JSONObject(content);
-                             String s = jobject.getString("Status");
-                             if(s.equalsIgnoreCase("success"))
-                             {
-                                 Toast.makeText(Indoor.this, "Task Updated", Toast.LENGTH_SHORT).show();
-                             }
-                           else  if(s.equalsIgnoreCase("Already Updated"))
-                             {
-                                 Toast.makeText(Indoor.this, "Task Already Updated!", Toast.LENGTH_SHORT).show();
-                             }
-                             else
-                             {
-                                 Toast.makeText(Indoor.this, "Something Went wrong!Check your details and try again", Toast.LENGTH_SHORT).show();
-                             }
+                } else {
+                    Toast.makeText(Indoor.this, "Something Went wrong!Check your details and try again", Toast.LENGTH_SHORT).show();
+                }
 
 
-                         }catch (Exception e){
-                             Toast.makeText(Indoor.this, "Exception caught"+e, Toast.LENGTH_SHORT).show();
-                         }
+            } catch (Exception e) {
+                Toast.makeText(Indoor.this, "Exception caught" + e, Toast.LENGTH_SHORT).show();
+            }
 
 
-                     }
-                 });
+        }
+    });
+}//ends nuul check if
+                 else{
+    Toast.makeText(Indoor.this, ""+"Fill all fields", Toast.LENGTH_SHORT).show();
+                 }
 
 
 

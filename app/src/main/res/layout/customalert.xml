@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="10dp">
     <TextView
         android:layout_width="wrap_content"
@@ -19,6 +19,11 @@
         android:hint="Enter your mail id here"
 
         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2"
+        android:orientation="horizontal">
     <Button
         android:id="@+id/submitinalert"
         android:layout_width="wrap_content"
@@ -26,9 +31,23 @@
         android:text="Submit"
         android:background="@drawable/roundbtn"
         android:textColor="#fff"
+        android:layout_weight="1"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="1dp"
 
         />
+        <Button
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:id="@+id/cancelinalert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:background="@drawable/roundbtn"
+            android:textColor="#fff"
+            android:layout_gravity="center"
+            android:layout_marginTop="1dp"
 
+            />
+    </LinearLayout>
 </LinearLayout>

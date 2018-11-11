@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
@@ -27,20 +29,22 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class Outdoor extends AppCompatActivity {
+    String current_date;String status;
     TextView taskhead,taskdetailstv;
     RadioGroup rg;
     RadioButton rb;
     Button Starttask,endtask;
     String  starttime,endtime;
-    AsyncHttpClient client;
+    AsyncHttpClient client,client2;
     JSONArray jarray;
     JSONObject jobject;
-    RequestParams params;
+    RequestParams params,params2;
     //final Context context = this;
     //forloc
     String s_longitude,s_latitude;
@@ -51,6 +55,9 @@ public class Outdoor extends AppCompatActivity {
     private final static int ALL_PERMISSIONS_RESULT = 101;
     LocationTrack locationTrack;
     //forloc
+   String urlformail="http://srishti-systems.info/projects/ticketbooking/api/emp_sentmail.php?";
+
+    String url="http://srishti-systems.info/projects/ticketbooking/api/emp_locationsave.php?";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +79,10 @@ public class Outdoor extends AppCompatActivity {
         }
         //for loc perm
         client = new AsyncHttpClient();
+        client2 = new AsyncHttpClient();
+
         params = new RequestParams();
+        params2=new RequestParams();
         taskhead=findViewById(R.id.taskheadingoutdoor);
         taskdetailstv=findViewById(R.id.taskdetailsoutdoor);
         SharedPreferences shared = getApplicationContext().getSharedPreferences("Pref",MODE_PRIVATE);
@@ -123,27 +133,160 @@ public class Outdoor extends AppCompatActivity {
 
                     locationTrack.showSettingsAlert();
                 }
-                 Toast.makeText(getApplicationContext(), "Longitude:" + s_longitude + "\nLatitude:" + s_latitude, Toast.LENGTH_SHORT).show();
+               //  Toast.makeText(getApplicationContext(), "Longitude:" + s_longitude + "\nLatitude:" + s_latitude, Toast.LENGTH_SHORT).show();
+
+//parse
+                Calendar coutdoor = Calendar.getInstance();
+                System.out.println("Current time =&gt; "+coutdoor.getTime());
+
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+                endtime = df.format(coutdoor.getTime());
+               // SimpleDateFormat dfdate = new SimpleDateFormat("yyyy-mm-dd");
+                //String currentdate=dfdate.format(coutdoor.getTime());
+               // Outdoor.this, "Ending time is "+endtime, Toast.LENGTH_SHORT).show();
+
+//
+                 Date c1 = Calendar.getInstance().getTime(); System.out.println("Current date => " + c1);
+                 SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+                 String current_Date = df1.format(c1);
+
+
+                // get selected radio button from radioGroup
+                int selectedId = rg.getCheckedRadioButtonId();
+
+                // find the radiobutton by returned id
+                rb = (RadioButton) findViewById(selectedId);
+                //..check if rb selected
+                if (rg.getCheckedRadioButtonId() == -1)
+                {
+                    // no radio buttons are checked
+                    // Toast.makeText(Indoor.this, "Nothing selected", Toast.LENGTH_SHORT).show();
+                    status="nothing_selected";
+                }
+                else
+                {
+                    // one of the radio buttons is checked
+                    status = (String) rb.getText();
+
+                }
+
+                //..
+                // status= (String) rb.getText();
+               // Toast.makeText(Outdoor.this,"SELCTED RB"+
+                       // status, Toast.LENGTH_SHORT).show();
+                if(status.equalsIgnoreCase("yes")||status.equalsIgnoreCase("no")) {
+
+                params.put("task_id",taskid);  //current_Date
+                params.put("time",endtime);     //user_id
+                params.put("date",current_Date);
+                params.put("status",status);     //
+                params.put("lat",s_latitude);     //
+                params.put("log",s_longitude);     //
+
+                client.get(url,params,new AsyncHttpResponseHandler(){
+                    @Override
+                    public void onSuccess(String content) {
+                        super.onSuccess(content);
+                        try{
+                            jobject = new JSONObject(content);
+                            String s = jobject.getString("Status");
+                            if(s.equalsIgnoreCase("success"))
+                            {
+                                Toast.makeText(Outdoor.this, "Task Updated", Toast.LENGTH_SHORT).show();
+                                //alert
+                                final Dialog dialog = new Dialog(Outdoor.this);
+                                dialog.setContentView(R.layout.customalert);
+                                Button dialogButton = (Button) dialog.findViewById(R.id.submitinalert);
+                                Button canceldialog = (Button) dialog.findViewById(R.id.cancelinalert);
+                                final EditText emailalert=(EditText)dialog.findViewById(R.id.emailinalert);
+                                // if button is clicked, close the custom dialog
+                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+//                        dialog.dismiss();
+//                        Toast.makeText(getApplicationContext(),"Dismissed..!!",Toast.LENGTH_SHORT).show();
+                                        String emailalert_s=emailalert.getText().toString();
+                                        Toast.makeText(Outdoor.this, ""+emailalert_s, Toast.LENGTH_SHORT).show();
+                                        params2.put("email",emailalert_s);
+                                        params2.put("task_id",taskid);
+                  client2.get(urlformail,params2,new AsyncHttpResponseHandler(){
+                      @Override
+                      public void onSuccess(String content) {
+                          super.onSuccess(content);
+                          try{
+                              jobject = new JSONObject(content);
+                              String s = jobject.getString("status");
+                              if(s.equalsIgnoreCase("Mail Senting successfully"))
+                              {
+                                  Toast.makeText(Outdoor.this, "Please visit the link in your inbox to rate us . Thank you ", Toast.LENGTH_SHORT).show();
+                                 startActivity(new Intent(Outdoor.this,NavActivity.class));
+                                  dialog.dismiss();;
+                              }
+                          }catch(Exception e){
+
+                          }
+                      }
+                  })       ;
+                                    }
+                                });
+                                canceldialog.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        dialog.dismiss();
+                                        Toast.makeText(getApplicationContext(),"Dismissed..!!",Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                dialog.show();
+                                dialog.getWindow().setLayout(900, 800);
+                                //alert
+
+                            }
+                            else  if(s.equalsIgnoreCase("Already Updated"))
+                            {
+
+                                Toast.makeText(Outdoor.this, "Task Already Updated!", Toast.LENGTH_SHORT).show();
+                                 startActivity(new Intent(Outdoor.this,NavActivity.class));
+                            }
+                            else
+                            {
+                                Toast.makeText(Outdoor.this, "Something Went wrong!Check your details and try again", Toast.LENGTH_SHORT).show();
+                            }
+
+
+                        }catch (Exception e){
+                            Toast.makeText(Outdoor.this, "Exception caught"+e, Toast.LENGTH_SHORT).show();
+                        }
+
+
+                    }
+                });
+
+            }//ends nuul check if
+                 else{
+                Toast.makeText(Outdoor.this, ""+"Fill all fields", Toast.LENGTH_SHORT).show();
+            }
+
+                //parse
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                 //get current loc
-//alert
-                final Dialog dialog = new Dialog(Outdoor.this);
-                dialog.setContentView(R.layout.customalert);
-                Button dialogButton = (Button) dialog.findViewById(R.id.submitinalert);
-                final EditText emailalert=(EditText)dialog.findViewById(R.id.emailinalert);
-                // if button is clicked, close the custom dialog
-                dialogButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        dialog.dismiss();
-//                        Toast.makeText(getApplicationContext(),"Dismissed..!!",Toast.LENGTH_SHORT).show();
-                 String emailalert_s=emailalert.getText().toString();
-                        Toast.makeText(Outdoor.this, ""+emailalert_s, Toast.LENGTH_SHORT).show();
-                    }
-                });
-                dialog.show();
-                //alert
+
+
 
             }
         });

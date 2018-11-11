@@ -41,14 +41,14 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AllTaskFragment extends Fragment {
+public class PendinFragment extends Fragment {
     AsyncHttpClient client;
     JSONArray jarray;
     JSONObject jobject;
     RequestParams params;
     ListView lv;
-
     private ShimmerFrameLayout mShimmerViewContainer;
+    String  starttime,endtime;
 
     ArrayList<String> today_task_id_array;
     ArrayList<String> emp_id_array;
@@ -68,7 +68,8 @@ public class AllTaskFragment extends Fragment {
 
 
 
-    public AllTaskFragment() {
+
+    public PendinFragment() {
         // Required empty public constructor
     }
 
@@ -76,15 +77,13 @@ public class AllTaskFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View mainview = inflater.inflate(R.layout.fragment_all_task, container, false);
+        View mainview = inflater.inflate(R.layout.fragment_pendin, container, false);
 
 
         client = new AsyncHttpClient();
         params = new RequestParams();
-
-        lv = mainview.findViewById(R.id.all_task_list);
-        mShimmerViewContainer = mainview.findViewById(R.id.shimmer_view_container_all_task);
-
+        lv = mainview.findViewById(R.id.pending_task_list);
+        mShimmerViewContainer = mainview.findViewById(R.id.shimmer_view_container_all_taskpending);
 
         today_task_id_array = new ArrayList<String>();
         emp_id_array = new ArrayList<String>();
@@ -99,9 +98,9 @@ public class AllTaskFragment extends Fragment {
         location_array = new ArrayList<String>();
         todaydate_array = new ArrayList<String>();
         status_array = new ArrayList<String>();
+
         formatdate = new ArrayList<String>();
         datesperated = new ArrayList<String>();
-
 
         Date c = Calendar.getInstance().getTime(); System.out.println("Current time => " + c);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -112,18 +111,28 @@ public class AllTaskFragment extends Fragment {
         SharedPreferences shared = getActivity().getSharedPreferences("Pref",MODE_PRIVATE);
         String user_id=shared.getString("user_id",null);
 
+//....
+        Calendar ctime = Calendar.getInstance();
+        System.out.println("Current time =&gt; "+c.getTime());
 
+        SimpleDateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+        starttime = dftime.format(c.getTime());
+       // Toast.makeText(getActivity(), "Starting time is "+starttime, Toast.LENGTH_SHORT).show();
+
+        //........
 
         params.put("date",current_Date);  //current_Date
+        params.put("time",starttime);  //current_Date
+
         params.put("emp_id",user_id);     //user_id
 
-        client.get("http://srishti-systems.info/projects/ticketbooking/api/emp_alltaskview.php?",params,new AsyncHttpResponseHandler(){
+        client.get("http://srishti-systems.info/projects/ticketbooking/api/emp_pendingtask.php?",params,new AsyncHttpResponseHandler(){
 
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
 
-                //  Toast.makeText(getActivity(), ""+content, Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getActivity(), ""+content, Toast.LENGTH_SHORT).show();
 
                 try {
 
@@ -157,7 +166,7 @@ public class AllTaskFragment extends Fragment {
 
 //month and date
                             String formatteddate=report;
-                           // Toast.makeText(getContext(), "fncall"+getfrmdate(formatteddate), Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(getContext(), "fncall"+getfrmdate(formatteddate), Toast.LENGTH_SHORT).show();
                             String finaldateformat=getmonthinwords(formatteddate);
                             formatdate.add(finaldateformat);
 
@@ -188,6 +197,7 @@ public class AllTaskFragment extends Fragment {
 
                         mShimmerViewContainer.stopShimmerAnimation();
                         mShimmerViewContainer.setVisibility(View.GONE);
+
                     }
                     else if(s.equalsIgnoreCase("fail")) {
                         AlertDialog.Builder b=  new  AlertDialog.Builder(getActivity())
@@ -208,9 +218,9 @@ public class AllTaskFragment extends Fragment {
                                         }
                                 );
                         AlertDialog alertDialog=b.create();
-                        alertDialog.setTitle("All Tasks Assingned");
-                        alertDialog.setMessage("You have no  tasks assigned !");
-                        alertDialog.setIcon(R.drawable.alltaskicon);
+                        alertDialog.setTitle("Pending Tasks");
+                        alertDialog.setMessage("You have no pending tasks !");
+                        alertDialog.setIcon(R.drawable.pendingtaskicon);
                         alertDialog.show();
 
 
@@ -221,33 +231,33 @@ public class AllTaskFragment extends Fragment {
                     }
                     adapter adpt = new adapter();
                     lv.setAdapter(adpt);
-
                     lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                         String tasktype=type_array.get(position);
-                         String taskheading=task_array.get(position);
-                         String taskdetails=taskdetails_array.get(position);
-                         String taskstarttime=starttime_array.get(position);
-                         String taskendtime=endtime_array.get(position);
-                         String taskstartdate=startdate_array.get(position);
-                         String taskid= today_task_id_array.get(position);
-       //tasktype                  //Toast.makeText(getContext(), "TTTASK"+tasktype, Toast.LENGTH_SHORT).show();
-                        if(tasktype.equalsIgnoreCase("indoor task"))
-                        {    SharedPreferences shared = getContext().getSharedPreferences("Pref",MODE_PRIVATE);
+                            String tasktype=type_array.get(position);
+                            String taskheading=task_array.get(position);
+                            String taskdetails=taskdetails_array.get(position);
+                            String taskstarttime=starttime_array.get(position);
+                            String taskendtime=endtime_array.get(position);
+                            String taskstartdate=startdate_array.get(position);
+                            String taskid= today_task_id_array.get(position);
+                            Toast.makeText(getContext(), "TTTASK"+tasktype, Toast.LENGTH_SHORT).show();
+                            if(tasktype.equalsIgnoreCase("indoor task"))
+                            {
+                                SharedPreferences shared = getContext().getSharedPreferences("Pref",MODE_PRIVATE);
 
-                            SharedPreferences.Editor editor=shared.edit();
-                            editor.putString("taskheading",taskheading);
-                            editor.putString("taskdetails",taskdetails);
-                            editor.putString("taskstarttime",taskstarttime);
-                            editor.putString("taskendtime",taskendtime);
-                            editor.putString("taskstartdate",taskstartdate);
-                            editor.putString("taskid",taskid);
-                            editor.apply();
-                            startActivity(new Intent(getContext(), Indoor.class));
-                        }
-                        else if(tasktype.equalsIgnoreCase("outdoor task"))
-                            startActivity(new Intent(getContext(), Outdoor.class));
+                                SharedPreferences.Editor editor=shared.edit();
+                                editor.putString("taskheading",taskheading);
+                                editor.putString("taskdetails",taskdetails);
+                                editor.putString("taskstarttime",taskstarttime);
+                                editor.putString("taskendtime",taskendtime);
+                                editor.putString("taskstartdate",taskstartdate);
+                                editor.putString("taskid",taskid);
+                                editor.apply();
+                                startActivity(new Intent(getContext(), Indoor.class));
+                            }
+                            else if(tasktype.equalsIgnoreCase("outdoor task"))
+                                startActivity(new Intent(getContext(), Outdoor.class));
 
                         }
                     });
@@ -271,7 +281,7 @@ public class AllTaskFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle("All Task");
+        getActivity().setTitle("Pending Task");
     }
 
     @Override
@@ -309,25 +319,27 @@ public class AllTaskFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             Inflater=(LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView= Inflater.inflate(R.layout.all_task_list,null);
+            convertView= Inflater.inflate(R.layout.pending_task_list,null);
             Viewholder holder=new Viewholder();
 
-            holder.task=(TextView)convertView.findViewById(R.id.textView_all_task);
+            holder.task=(TextView)convertView.findViewById(R.id.textView_taskpending);
             holder.task.setText(task_array.get(position));
 
-            holder.task_details=(TextView)convertView.findViewById(R.id.textView_all_task_details);
+            holder.task_details=(TextView)convertView.findViewById(R.id.textView_task_detailspending);
             holder.task_details.setText(taskdetails_array.get(position));
 
-            holder.type=(TextView)convertView.findViewById(R.id.textView_all_type);
+            holder.type=(TextView)convertView.findViewById(R.id.textView_typepending);
             holder.type.setText(type_array.get(position));
 
-            holder.t_month=(TextView)convertView.findViewById(R.id.textView_month);
+//            holder.up_date=(TextView)convertView.findViewById(R.id.textView_upcomng_task_date);
+//            holder.up_date.setText(startdate_array.get(position));
+
+
+            holder.t_month=(TextView)convertView.findViewById(R.id.textView_monthpendingtask);
             holder.t_month.setText(formatdate.get(position));
 
-            holder.t_date=(TextView)convertView.findViewById(R.id.textView_date);
+            holder.t_date=(TextView)convertView.findViewById(R.id.texView_datependingtask);
             holder.t_date.setText(datesperated.get(position));
-
-
 
             return convertView;
         }
@@ -336,18 +348,17 @@ public class AllTaskFragment extends Fragment {
             TextView task;
             TextView task_details;
             TextView type;
+            TextView up_date;
             TextView t_month;
             TextView t_date;
 
-
         }
     }
-//get month in words
     public String getmonthinwords(String date)
 
     {   String month=date.substring(5,7);
-       String dateaftermonth=date.substring(8,10);
-      //  Toast.makeText(getContext(), "getrfm date substring"+month+"datee  "+dateaftermonth, Toast.LENGTH_SHORT).show();
+        String dateaftermonth=date.substring(8,10);
+        //Toast.makeText(getContext(), "getrfm date substring"+month+"datee  "+dateaftermonth, Toast.LENGTH_SHORT).show();
         StringBuilder monthinwords=new StringBuilder();
         if(month.equals("10"))
         {
@@ -397,7 +408,7 @@ public class AllTaskFragment extends Fragment {
         {
             monthinwords.append("Sep ");
         }
-      //  Toast.makeText(getContext(), ""+monthinwords, Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(getContext(), ""+monthinwords, Toast.LENGTH_SHORT).show();
 
         return String.valueOf(monthinwords);
     }
@@ -408,3 +419,4 @@ public class AllTaskFragment extends Fragment {
         return dateaftermonth;
     }
 }
+

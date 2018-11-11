@@ -48,6 +48,7 @@
                 android:ems="10"
                 android:gravity="left"
                 android:hint="E-Mail"
+                android:maxLines="1"
                 android:inputType="textPersonName"
                 android:textColor="#fff"
                 android:textColorHint="#fff"
@@ -71,6 +72,8 @@
             <EditText
                 android:id="@+id/editText_password"
                 android:layout_width="250dp"
+                android:maxLines="1"
+
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="9dp"
@@ -102,7 +105,8 @@
             android:text="Log In"
             android:textSize="16dp"
             android:textColor="#fff"
-            android:background="#008080"
+            android:background="@drawable/roundbtn"
+
             android:layout_marginTop="90dp"/>
 
         <LinearLayout

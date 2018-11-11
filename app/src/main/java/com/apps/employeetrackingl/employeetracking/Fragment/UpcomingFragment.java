@@ -1,7 +1,9 @@
 package com.apps.employeetrackingl.employeetracking.Fragment;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apps.employeetrackingl.employeetracking.Indoor;
+import com.apps.employeetrackingl.employeetracking.NavActivity;
 import com.apps.employeetrackingl.employeetracking.Outdoor;
 import com.apps.employeetrackingl.employeetracking.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -108,8 +111,8 @@ public class UpcomingFragment extends Fragment {
 
 
 
-        params.put("date","2018-10-20");  //current_Date
-        params.put("emp_id","2");     //user_id
+        params.put("date",current_Date);  //current_Date
+        params.put("emp_id",user_id);     //user_id
 
         client.get("http://srishti-systems.info/projects/ticketbooking/api/emp_nottodaytask.php?",params,new AsyncHttpResponseHandler(){
 
@@ -117,7 +120,7 @@ public class UpcomingFragment extends Fragment {
             public void onSuccess(String content) {
                 super.onSuccess(content);
 
-               Toast.makeText(getActivity(), ""+content, Toast.LENGTH_SHORT).show();
+          //     Toast.makeText(getActivity(), ""+content, Toast.LENGTH_SHORT).show();
 
                 try {
 
@@ -132,19 +135,19 @@ public class UpcomingFragment extends Fragment {
                             JSONObject obj = jarray.getJSONObject(i);
 
                             String pre_id = obj.getString("id");
-                            today_task_id_array.add("id:" + pre_id);
+                            today_task_id_array.add("" + pre_id);
 
                             String p_id = obj.getString("emp_id");
-                            emp_id_array.add("emp_id:" + p_id);
+                            emp_id_array.add("" + p_id);
 
                             String d_id = obj.getString("task");
-                            task_array.add("task:" + d_id);
+                            task_array.add("" + d_id);
 
                             String date = obj.getString("taskdetails");
-                            taskdetails_array.add("taskdetails" + date);
+                            taskdetails_array.add("" + date);
 
                             String time = obj.getString("org");
-                            org_array.add("org" + time);
+                            org_array.add("" + time);
 
                             String report = obj.getString("startdate");
                             startdate_array.add("" + report);
@@ -159,7 +162,7 @@ public class UpcomingFragment extends Fragment {
                             datesperated.add(datesperatedfromoriginal);
 //month and date end
                             String pre_time = obj.getString("date");
-                            date_array.add("date" + pre_time);
+                            date_array.add("" + pre_time);
 
                             String med_mrn = obj.getString("type");
                             type_array.add("" + med_mrn);
@@ -168,23 +171,52 @@ public class UpcomingFragment extends Fragment {
                             starttime_array.add("" + med_aff);
 
                             String med_eve = obj.getString("endtime");
-                            endtime_array.add("endtime" + med_eve);
+                            endtime_array.add("" + med_eve);
 
                             String time_mrn = obj.getString("location");
-                            location_array.add("location" + time_mrn);
+                            location_array.add("" + time_mrn);
 
                             String time_aff = obj.getString("todaydate");
-                            todaydate_array.add("todaydate" + time_aff);
+                            todaydate_array.add("" + time_aff);
 
                             String time_eve = obj.getString("status");
-                            status_array.add("status" + time_eve);
+                            status_array.add("" + time_eve);
                         }
 
                         mShimmerViewContainer.stopShimmerAnimation();
                         mShimmerViewContainer.setVisibility(View.GONE);
 
                     }
+                    else if(s.equalsIgnoreCase("fail"))    {
+                        AlertDialog.Builder b=  new  AlertDialog.Builder(getActivity())
+                                .setTitle("You have no pending tasks !")
+                                .setPositiveButton("OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                // do something...
+                                                startActivity(new Intent(getActivity(), NavActivity.class));
+                                            }
+                                        }
+                                )
+                                .setNegativeButton("Cancel",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                dialog.dismiss();
+                                            }
+                                        }
+                                );
+                        AlertDialog alertDialog=b.create();
+                        alertDialog.setTitle("Upcoming Tasks");
+                        alertDialog.setMessage("You have no upcoming tasks !");
+                        alertDialog.setIcon(R.drawable.upcomingtaskicon);
+                        alertDialog.show();
 
+
+                        //Toast.makeText(getActivity(), "" + "You have no pending task", Toast.LENGTH_SHORT).show();
+                        mShimmerViewContainer.stopShimmerAnimation();
+                        mShimmerViewContainer.setVisibility(View.GONE);
+
+                    }
                     adapter adpt = new adapter();
                     up_lv.setAdapter(adpt);
                     up_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -314,7 +346,7 @@ public class UpcomingFragment extends Fragment {
 
     {   String month=date.substring(5,7);
         String dateaftermonth=date.substring(8,10);
-        Toast.makeText(getContext(), "getrfm date substring"+month+"datee  "+dateaftermonth, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "getrfm date substring"+month+"datee  "+dateaftermonth, Toast.LENGTH_SHORT).show();
         StringBuilder monthinwords=new StringBuilder();
         if(month.equals("10"))
         {
@@ -364,7 +396,7 @@ public class UpcomingFragment extends Fragment {
         {
             monthinwords.append("Sep ");
         }
-        Toast.makeText(getContext(), ""+monthinwords, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), ""+monthinwords, Toast.LENGTH_SHORT).show();
 
         return String.valueOf(monthinwords);
     }

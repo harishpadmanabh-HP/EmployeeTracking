@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.apps.employeetrackingl.employeetracking.SplashActivity">
 
+    <ImageView
+        android:layout_width="265dp"
+        android:layout_height="374dp"
+        android:layout_gravity="center|center_vertical|center_horizontal"
+        android:layout_marginLeft="50dp"
+        android:background="@drawable/si_logo" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
 </LinearLayout>

@@ -1,7 +1,9 @@
 package com.apps.employeetrackingl.employeetracking;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -18,12 +20,13 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.apps.employeetrackingl.employeetracking.Fragment.AllTaskFragment;
+import com.apps.employeetrackingl.employeetracking.Fragment.PendinFragment;
 import com.apps.employeetrackingl.employeetracking.Fragment.TodayTaskFragment;
 import com.apps.employeetrackingl.employeetracking.Fragment.UpcomingFragment;
 
 public class NavActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+SharedPreferences prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +72,7 @@ public class NavActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            finishAffinity();
             super.onBackPressed();
         }
     }
@@ -89,6 +93,11 @@ public class NavActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            prefs = PreferenceManager.getDefaultSharedPreferences(NavActivity.this);
+            prefs.edit().clear().commit();
+            Intent in = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(in);
+            finish();
             return true;
         }
 
@@ -135,6 +144,10 @@ public class NavActivity extends AppCompatActivity
            /* case R.id.nav_pending_task:
                 fragment = new ();
                 break;*/
+
+            case R.id.nav_pending_task:
+                fragment = new PendinFragment();
+                break;
         }
 
         if (fragment != null) {

@@ -1,7 +1,9 @@
 package com.apps.employeetrackingl.employeetracking.Fragment;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apps.employeetrackingl.employeetracking.Indoor;
+import com.apps.employeetrackingl.employeetracking.NavActivity;
 import com.apps.employeetrackingl.employeetracking.Outdoor;
 import com.apps.employeetrackingl.employeetracking.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -112,8 +115,8 @@ public class TodayTaskFragment extends Fragment {
 
 
 
-        params.put("date","2018-10-24");  //current_Date
-        params.put("emp_id","2");     //user_id
+        params.put("date",current_Date);  //current_Date
+        params.put("emp_id",user_id);     //user_id
 
         client.get("http://srishti-systems.info/projects/ticketbooking/api/emp_taskdetails.php?",params,new AsyncHttpResponseHandler(){
 
@@ -188,7 +191,36 @@ public class TodayTaskFragment extends Fragment {
                         mShimmerViewContainer.setVisibility(View.GONE);
                     }
 
+                    else if(s.equalsIgnoreCase("fail"))   {
+                        AlertDialog.Builder b=  new  AlertDialog.Builder(getActivity())
+                                .setTitle("You have no pending tasks !")
+                                .setPositiveButton("OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                // do something...
+                                                startActivity(new Intent(getActivity(), NavActivity.class));
+                                            }
+                                        }
+                                )
+                                .setNegativeButton("Cancel",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                dialog.dismiss();
+                                            }
+                                        }
+                                );
+                        AlertDialog alertDialog=b.create();
+                        alertDialog.setTitle("Today Tasks");
+                        alertDialog.setMessage("You have no  tasks assigned today yet. !");
+                        alertDialog.setIcon(R.drawable.todaystaskicon);
+                        alertDialog.show();
 
+
+                        //Toast.makeText(getActivity(), "" + "You have no pending task", Toast.LENGTH_SHORT).show();
+                        mShimmerViewContainer.stopShimmerAnimation();
+                        mShimmerViewContainer.setVisibility(View.GONE);
+
+                    }
 
                     adapter adpt = new adapter();
                     lv.setAdapter(adpt);
@@ -320,7 +352,7 @@ public class TodayTaskFragment extends Fragment {
 
     {   String month=date.substring(5,7);
         String dateaftermonth=date.substring(8,10);
-        Toast.makeText(getContext(), "getrfm date substring"+month+"datee  "+dateaftermonth, Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(getContext(), "getrfm date substring"+month+"datee  "+dateaftermonth, Toast.LENGTH_SHORT).show();
         StringBuilder monthinwords=new StringBuilder();
         if(month.equals("10"))
         {
@@ -370,7 +402,7 @@ public class TodayTaskFragment extends Fragment {
         {
             monthinwords.append("Sep ");
         }
-        Toast.makeText(getContext(), ""+monthinwords, Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(getContext(), ""+monthinwords, Toast.LENGTH_SHORT).show();
 
         return String.valueOf(monthinwords);
     }

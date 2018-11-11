@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:padding="10dp"
-
-    android:layout_height="wrap_content">
-
+    android:orientation="horizontal">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="60"
         android:background="#fff"
-        android:layout_marginTop="2dp"
         android:orientation="vertical">
 
 
@@ -25,7 +22,7 @@
             android:background="@drawable/round_button">
 
             <TextView
-                android:id="@+id/textView_month"
+                android:id="@+id/textView_monthpendingtask"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -33,15 +30,15 @@
                 android:layout_marginTop="10dp"
                 android:textStyle="bold"
                 android:textSize="25dp"
-                android:text="nnn " />
+                android:text="Oc " />
 
             <TextView
-                android:id="@+id/textView_date"
+                android:id="@+id/texView_datependingtask"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textView_month"
+                android:layout_below="@+id/textView_monthpendingtask"
                 android:layout_centerHorizontal="true"
-                android:text="22"
+                android:text="2"
                 android:textColor="#fff"
                 android:textSize="20dp"
                 android:textStyle="bold" />
@@ -56,11 +53,10 @@
         android:layout_weight="20"
         android:background="#fff"
         android:padding="5dp"
-        android:layout_marginTop="5dp"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView_all_task"
+            android:id="@+id/textView_taskpending"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
@@ -69,14 +65,14 @@
             android:text="TextView" />
 
         <TextView
-            android:id="@+id/textView_all_task_details"
+            android:id="@+id/textView_task_detailspending"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:text="TextView"/>
 
         <TextView
-            android:id="@+id/textView_all_type"
+            android:id="@+id/textView_typepending"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
@@ -84,8 +80,5 @@
             android:text="TextView"/>
 
     </LinearLayout>
-
-
-
 
 </LinearLayout>
