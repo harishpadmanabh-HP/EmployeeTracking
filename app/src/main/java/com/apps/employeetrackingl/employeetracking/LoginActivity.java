@@ -43,10 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sparelogin);
-        checkinternet=isNetworkAvailable();
-        if(checkinternet==true)
-            Toast.makeText(this, "Please check your internet connection", Toast.LENGTH_SHORT).show();
-        client = new AsyncHttpClient();
+               client = new AsyncHttpClient();
         params = new RequestParams();
 
         user_mail = findViewById(R.id.editText_user_mail);
@@ -89,11 +86,16 @@ public class LoginActivity extends AppCompatActivity {
           @Override
           public void onClick(View view) {
 
-                  /* s_mail = user_mail.getText().toString();
-             s_password = user_password.getText().toString();*/
+                   s_mail = user_mail.getText().toString();
+             s_password = user_password.getText().toString();
 // Hardcoded
-              params.put("username","monisha.sics@gmail.com");
-              params.put("password","monisha123");
+              //check internet connection
+              checkinternet=isNetworkAvailable();
+              if(checkinternet==false)
+                  Toast.makeText(LoginActivity.this, "Please check your internet connection", Toast.LENGTH_SHORT).show();
+
+              params.put("username",s_mail);
+              params.put("password",s_password);
 
               client.get("http://srishti-systems.info/projects/ticketbooking/api/emp_login.php?",params,new AsyncHttpResponseHandler(){
 

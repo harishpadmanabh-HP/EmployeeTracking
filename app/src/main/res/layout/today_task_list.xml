@@ -78,6 +78,16 @@
             android:layout_marginBottom="3dp"
             android:layout_marginTop="3dp"
             android:text="TextView"/>
+        <TextView
+            android:id="@+id/textView_start_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
+            android:text="TextView"
+            android:textColor="#008080"
+
+            />
 
     </LinearLayout>
 

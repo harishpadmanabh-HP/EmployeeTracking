@@ -1,5 +1,6 @@
 package com.apps.employeetrackingl.employeetracking;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +36,7 @@ public class Indoor extends AppCompatActivity {
     RequestParams params;
     String updatetaskurl="http://srishti-systems.info/projects/ticketbooking/api/emp_taskcompleted.php?";
  //   String currenttime;
+ String taskheading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +48,7 @@ public class Indoor extends AppCompatActivity {
         taskhead=findViewById(R.id.taskheading);
         taskdetailstv=findViewById(R.id.taskdetails);
         SharedPreferences shared = getApplicationContext().getSharedPreferences("Pref",MODE_PRIVATE);
-        String taskheading=shared.getString("taskheading",null);
+        taskheading=shared.getString("taskheading",null);
         String taskdetails=shared.getString("taskdetails",null);
         String taskstarttime=shared.getString("taskstarttime",null);
         String taskendtime=shared.getString("taskendtime",null);
@@ -84,11 +86,14 @@ public class Indoor extends AppCompatActivity {
 
                  SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
                  endtime = df.format(c.getTime());
-                 SimpleDateFormat dfdate = new SimpleDateFormat("yyyy-mm-dd");
-                 String currentdate=dfdate.format(c.getTime());
+//                 SimpleDateFormat dfdate = new SimpleDateFormat("yyyy-mm-dd");
+//                 String currentdate=dfdate.format(c.getTime());
+                 Date c1 = Calendar.getInstance().getTime(); System.out.println("Current date => " + c1);
+                 SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+                 String currentdate = df1.format(c1);
 
-                 Toast.makeText(Indoor.this, "Ending time is "+endtime, Toast.LENGTH_SHORT).show();
-                 Toast.makeText(Indoor.this, "Date is "+currentdate, Toast.LENGTH_SHORT).show();
+//                 Toast.makeText(Indoor.this, "Ending time is "+endtime, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(Indoor.this, "Date is "+currentdate, Toast.LENGTH_SHORT).show();
 
 
 //                 Date c1new = Calendar.getInstance().getTime(); System.out.println("Current date => " + c1new);
@@ -119,8 +124,8 @@ public class Indoor extends AppCompatActivity {
 
   //  String status = (String) rb.getText();
 
-                 Toast.makeText(Indoor.this,"SELCTED RB"+
-                         status, Toast.LENGTH_SHORT).show();
+//                 Toast.makeText(Indoor.this,"SELCTED RB"+
+//                         status, Toast.LENGTH_SHORT).show();
 if(status.equalsIgnoreCase("yes")||status.equalsIgnoreCase("no")) {
     params.put("task_id", taskid);  //task id
     params.put("time", endtime);     //end time
@@ -135,9 +140,11 @@ if(status.equalsIgnoreCase("yes")||status.equalsIgnoreCase("no")) {
                 jobject = new JSONObject(content);
                 String s = jobject.getString("Status");
                 if (s.equalsIgnoreCase("success")) {
+                   // showalertbox("Task Updated");
                     Toast.makeText(Indoor.this, "Task Updated", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Indoor.this,NavActivity.class));
                 } else if (s.equalsIgnoreCase("Already Updated")) {
+                   // showalertbox("Task Already Updated!");
                     Toast.makeText(Indoor.this, "Task Already Updated!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Indoor.this,NavActivity.class));
 
@@ -164,4 +171,31 @@ if(status.equalsIgnoreCase("yes")||status.equalsIgnoreCase("no")) {
          });
 
     }
+    private void showalertbox(String s) {
+        android.app.AlertDialog.Builder b=  new  android.app.AlertDialog.Builder(Indoor.this)
+                .setTitle(taskheading)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // do something...
+                                dialog.dismiss();
+                                // startActivity(new Intent(getApplicationContext(), NavActivity.class));
+                            }
+                        }
+                )
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
+        android.app.AlertDialog alertDialog=b.create();
+        alertDialog.setTitle(taskheading);
+        alertDialog.setMessage(s);
+        // alertDialog.setIcon(R.drawable.todaystaskicon);
+        alertDialog.show();
+
+    }
+
 }

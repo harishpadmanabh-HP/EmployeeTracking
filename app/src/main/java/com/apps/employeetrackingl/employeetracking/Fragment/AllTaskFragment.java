@@ -247,7 +247,20 @@ public class AllTaskFragment extends Fragment {
                             startActivity(new Intent(getContext(), Indoor.class));
                         }
                         else if(tasktype.equalsIgnoreCase("outdoor task"))
+                        {
+                            SharedPreferences shared = getContext().getSharedPreferences("Pref",MODE_PRIVATE);
+
+                            SharedPreferences.Editor editor=shared.edit();
+                            editor.putString("taskheading",taskheading);
+                            editor.putString("taskdetails",taskdetails);
+                            editor.putString("taskstarttime",taskstarttime);
+                            editor.putString("taskendtime",taskendtime);
+                            editor.putString("taskstartdate",taskstartdate);
+                            editor.putString("taskid",taskid);
+                            editor.apply();
                             startActivity(new Intent(getContext(), Outdoor.class));
+
+                        }
 
                         }
                     });
@@ -327,6 +340,8 @@ public class AllTaskFragment extends Fragment {
             holder.t_date=(TextView)convertView.findViewById(R.id.textView_date);
             holder.t_date.setText(datesperated.get(position));
 
+            holder.starttime=(TextView)convertView.findViewById(R.id.textView_start_time);
+            holder.starttime.setText("Time : "+starttime_array.get(position)+" To "+endtime_array.get(position));
 
 
             return convertView;
@@ -338,6 +353,7 @@ public class AllTaskFragment extends Fragment {
             TextView type;
             TextView t_month;
             TextView t_date;
+            TextView starttime;
 
 
         }

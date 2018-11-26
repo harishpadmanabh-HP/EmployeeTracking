@@ -23,6 +23,7 @@
             android:layout_gravity="center"
             />
         <TextView
+
             android:id="@+id/taskheading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,7 +39,7 @@
             android:layout_height="wrap_content"
             android:text="Task details"
             android:textStyle="normal"
-            android:textColor="#707680"
+            android:textColor="#060606"
             android:layout_marginLeft="20dp"
             android:textSize="20dp"
             />
@@ -54,13 +55,13 @@
 
             />
 
-        <EditText
-            android:id="@+id/taskupdates"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="25dp"
-            android:hint="Task dtails and updates"
-            />
+        <!--<EditText-->
+            <!--android:id="@+id/taskupdates"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="25dp"-->
+            <!--android:hint="Task dtails and updates"-->
+            <!--/>-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:text="Completed ?"
                 android:textStyle="bold"
-                android:layout_marginLeft="15dp"
+android:textSize="20dp"                android:layout_marginLeft="15dp"
 
                 />
             <RadioGroup

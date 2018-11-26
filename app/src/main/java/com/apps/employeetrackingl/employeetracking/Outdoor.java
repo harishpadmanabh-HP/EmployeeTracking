@@ -11,6 +11,7 @@ import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -182,14 +183,16 @@ public class Outdoor extends AppCompatActivity {
                 params.put("status",status);     //
                 params.put("lat",s_latitude);     //
                 params.put("log",s_longitude);     //
-
-                client.get(url,params,new AsyncHttpResponseHandler(){
+//showalertbox(params.toString());
+                client.post(url,params,new AsyncHttpResponseHandler(){
                     @Override
                     public void onSuccess(String content) {
                         super.onSuccess(content);
+                        Log.e("tessstparams",url+params);
                         try{
                             jobject = new JSONObject(content);
                             String s = jobject.getString("Status");
+                            Log.e("STATUS",content);
                             if(s.equalsIgnoreCase("success"))
                             {
                                 Toast.makeText(Outdoor.this, "Task Updated", Toast.LENGTH_SHORT).show();
@@ -296,6 +299,33 @@ public class Outdoor extends AppCompatActivity {
 
     }
 
+    private void showalertbox(String s) {
+        android.app.AlertDialog.Builder b=  new  android.app.AlertDialog.Builder(Outdoor.this)
+                .setTitle("Request params")
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // do something...
+                                dialog.dismiss();
+                                // startActivity(new Intent(getApplicationContext(), NavActivity.class));
+                            }
+                        }
+                )
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
+        android.app.AlertDialog alertDialog=b.create();
+        alertDialog.setTitle("params");
+        alertDialog.setMessage(s);
+       // alertDialog.setIcon(R.drawable.todaystaskicon);
+        alertDialog.show();
+
+    }
+
     private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
         ArrayList<String> result = new ArrayList<String>();
 
@@ -368,6 +398,7 @@ public class Outdoor extends AppCompatActivity {
                 .create()
                 .show();
     }
+
 
     @Override
     protected void onDestroy() {

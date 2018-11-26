@@ -245,8 +245,20 @@ public class UpcomingFragment extends Fragment {
                                 startActivity(new Intent(getContext(), Indoor.class));
                             }
                             else if(tasktype.equalsIgnoreCase("outdoor task"))
+                            {
+                                SharedPreferences shared = getContext().getSharedPreferences("Pref",MODE_PRIVATE);
+
+                                SharedPreferences.Editor editor=shared.edit();
+                                editor.putString("taskheading",taskheading);
+                                editor.putString("taskdetails",taskdetails);
+                                editor.putString("taskstarttime",taskstarttime);
+                                editor.putString("taskendtime",taskendtime);
+                                editor.putString("taskstartdate",taskstartdate);
+                                editor.putString("taskid",taskid);
+                                editor.apply();
                                 startActivity(new Intent(getContext(), Outdoor.class));
 
+                            }
                         }
                     });
 
