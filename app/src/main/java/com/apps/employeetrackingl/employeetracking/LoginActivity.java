@@ -73,8 +73,9 @@ public class LoginActivity extends AppCompatActivity {
 //            }
 //        });
 // EYE BUTTON END
-        user_mail.setText("monisha.sics@gmail.com");
-        user_password.setText("monisha123");
+        //Hardcoded
+//        user_mail.setText("monisha.sics@gmail.com");
+//        user_password.setText("monisha123");
 
 
 

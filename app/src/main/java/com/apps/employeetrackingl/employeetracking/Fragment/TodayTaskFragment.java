@@ -234,8 +234,9 @@ public class TodayTaskFragment extends Fragment {
                             String taskendtime=endtime_array.get(position);
                             String taskstartdate=startdate_array.get(position);
                             String taskid= today_task_id_array.get(position);
+                            String taskstatus=status_array.get(position);
                             Toast.makeText(getContext(), "TTTASK"+tasktype, Toast.LENGTH_SHORT).show();
-                            if(tasktype.equalsIgnoreCase("indoor task"))
+                            if(tasktype.equalsIgnoreCase("indoor task") && taskstatus.equalsIgnoreCase("pending"))
                             { SharedPreferences shared = getContext().getSharedPreferences("Pref",MODE_PRIVATE);
 
                                 SharedPreferences.Editor editor=shared.edit();
@@ -245,10 +246,12 @@ public class TodayTaskFragment extends Fragment {
                                 editor.putString("taskendtime",taskendtime);
                                 editor.putString("taskstartdate",taskstartdate);
                                 editor.putString("taskid",taskid);
+                                editor.putString("taskstatus",taskstatus);
+
                                 editor.apply();
                                 startActivity(new Intent(getContext(), Indoor.class));
                             }
-                            else if(tasktype.equalsIgnoreCase("outdoor task"))
+                            else if(tasktype.equalsIgnoreCase("outdoor task")&& taskstatus.equalsIgnoreCase("pending"))
                             {
                                 SharedPreferences shared = getContext().getSharedPreferences("Pref",MODE_PRIVATE);
 
@@ -259,10 +262,72 @@ public class TodayTaskFragment extends Fragment {
                                 editor.putString("taskendtime",taskendtime);
                                 editor.putString("taskstartdate",taskstartdate);
                                 editor.putString("taskid",taskid);
+                                editor.putString("taskstatus",taskstatus);
+
                                 editor.apply();
                                 startActivity(new Intent(getContext(), Outdoor.class));
 
                             }
+                            //for completed tasks show alert
+                            else if(tasktype.equalsIgnoreCase("outdoor task")&& taskstatus.equalsIgnoreCase("completed"))
+                            {
+                                AlertDialog.Builder b=  new  AlertDialog.Builder(getActivity())
+                                        .setTitle("You have completed this task!")
+                                        .setPositiveButton("OK",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                                        // do something...
+                                                        startActivity(new Intent(getActivity(), NavActivity.class));
+                                                    }
+                                                }
+                                        )
+                                        .setNegativeButton("Cancel",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                                        dialog.dismiss();
+                                                    }
+                                                }
+                                        );
+                                AlertDialog alertDialog=b.create();
+                                alertDialog.setTitle(taskheading);
+                                alertDialog.setMessage("You have completed this task !");
+                                alertDialog.setIcon(R.drawable.alltaskicon);
+                                alertDialog.show();
+
+
+
+                            }
+                            else if(tasktype.equalsIgnoreCase("indoor task")&& taskstatus.equalsIgnoreCase("completed"))
+                            {
+                                AlertDialog.Builder b=  new  AlertDialog.Builder(getActivity())
+                                        .setTitle("You have completed this task!")
+                                        .setPositiveButton("OK",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                                        // do something...
+                                                        startActivity(new Intent(getActivity(), NavActivity.class));
+                                                    }
+                                                }
+                                        )
+                                        .setNegativeButton("Cancel",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                                        dialog.dismiss();
+                                                    }
+                                                }
+                                        );
+                                AlertDialog alertDialog=b.create();
+                                alertDialog.setTitle(taskheading);
+                                alertDialog.setMessage("You have completed this task !");
+                                alertDialog.setIcon(R.drawable.alltaskicon);
+                                alertDialog.show();
+
+
+
+                            }
+
+
+
                         }
                     });
 

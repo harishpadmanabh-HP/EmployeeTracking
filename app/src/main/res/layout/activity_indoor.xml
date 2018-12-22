@@ -13,6 +13,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <!-- TODO: Update blank fragment layout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            >
+            <ImageButton
+                android:id="@+id/backimagebutton"
+                android:onClick="backimagepress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/backbuttonimagebutton"
+                />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,8 +33,12 @@
             android:textStyle="bold"
             android:textColor="#000"
             android:textSize="30dp"
-            android:layout_gravity="center"
+android:gravity="center"
+            android:layout_weight="1"
+
+            android:layout_marginLeft="0dp"
             />
+    </LinearLayout>
         <TextView
 
             android:id="@+id/taskheading"
@@ -52,6 +69,8 @@
             android:background="@drawable/roundbtn"
             android:textColor="#fff"
             android:textStyle="bold"
+            android:translationZ="30dp"
+            android:elevation="50dp"
 
             />
 
@@ -77,6 +96,7 @@ android:textSize="20dp"                android:layout_marginLeft="15dp"
                 />
             <RadioGroup
                 android:id="@+id/radiogroup"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             <RadioButton

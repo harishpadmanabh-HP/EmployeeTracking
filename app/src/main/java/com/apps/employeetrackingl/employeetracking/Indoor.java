@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ public class Indoor extends AppCompatActivity {
     JSONArray jarray;
     JSONObject jobject;
     RequestParams params;
+    ImageButton backimage;
     String updatetaskurl="http://srishti-systems.info/projects/ticketbooking/api/emp_taskcompleted.php?";
  //   String currenttime;
  String taskheading;
@@ -41,7 +43,7 @@ public class Indoor extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_indoor);
-
+        backimage=findViewById(R.id.backimagebutton);
         client = new AsyncHttpClient();
         params = new RequestParams();
 
@@ -198,4 +200,7 @@ if(status.equalsIgnoreCase("yes")||status.equalsIgnoreCase("no")) {
 
     }
 
+    public void backimagepress(View view) {
+        startActivity(new Intent(Indoor.this,NavActivity.class));
+    }
 }

@@ -403,6 +403,13 @@ public class Outdoor extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        locationTrack = new LocationTrack(Outdoor.this);
+
         locationTrack.stopListener();
+    }
+
+    public void backimagepress(View view) {
+        startActivity(new Intent(Outdoor.this,NavActivity.class));
+
     }
 }

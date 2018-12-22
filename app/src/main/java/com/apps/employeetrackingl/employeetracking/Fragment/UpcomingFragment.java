@@ -229,6 +229,8 @@ public class UpcomingFragment extends Fragment {
                             String taskendtime=endtime_array.get(position);
                             String taskstartdate=startdate_array.get(position);
                             String taskid= today_task_id_array.get(position);
+                            String taskstatus= status_array.get(position);
+
                             Toast.makeText(getContext(), "TTTASK"+tasktype, Toast.LENGTH_SHORT).show();
                             if(tasktype.equalsIgnoreCase("indoor task"))
                             {
@@ -241,6 +243,8 @@ public class UpcomingFragment extends Fragment {
                                 editor.putString("taskendtime",taskendtime);
                                 editor.putString("taskstartdate",taskstartdate);
                                 editor.putString("taskid",taskid);
+                                editor.putString("taskstatus",taskstatus);
+
                                 editor.apply();
                                 startActivity(new Intent(getContext(), Indoor.class));
                             }
@@ -255,6 +259,8 @@ public class UpcomingFragment extends Fragment {
                                 editor.putString("taskendtime",taskendtime);
                                 editor.putString("taskstartdate",taskstartdate);
                                 editor.putString("taskid",taskid);
+                                editor.putString("taskstatus",taskstatus);
+
                                 editor.apply();
                                 startActivity(new Intent(getContext(), Outdoor.class));
 

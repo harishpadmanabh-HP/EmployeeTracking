@@ -232,8 +232,10 @@ public class AllTaskFragment extends Fragment {
                          String taskendtime=endtime_array.get(position);
                          String taskstartdate=startdate_array.get(position);
                          String taskid= today_task_id_array.get(position);
+                         String taskstatus=status_array.get(position);
        //tasktype                  //Toast.makeText(getContext(), "TTTASK"+tasktype, Toast.LENGTH_SHORT).show();
-                        if(tasktype.equalsIgnoreCase("indoor task"))
+                       //for status pending
+                        if(tasktype.equalsIgnoreCase("indoor task") && taskstatus.equalsIgnoreCase("pending"))
                         {    SharedPreferences shared = getContext().getSharedPreferences("Pref",MODE_PRIVATE);
 
                             SharedPreferences.Editor editor=shared.edit();
@@ -243,10 +245,15 @@ public class AllTaskFragment extends Fragment {
                             editor.putString("taskendtime",taskendtime);
                             editor.putString("taskstartdate",taskstartdate);
                             editor.putString("taskid",taskid);
+                            editor.putString("taskstatus",taskstatus);
+
+
                             editor.apply();
                             startActivity(new Intent(getContext(), Indoor.class));
                         }
-                        else if(tasktype.equalsIgnoreCase("outdoor task"))
+                        //for status pending
+
+                        else if(tasktype.equalsIgnoreCase("outdoor task")&& taskstatus.equalsIgnoreCase("pending"))
                         {
                             SharedPreferences shared = getContext().getSharedPreferences("Pref",MODE_PRIVATE);
 
@@ -257,10 +264,70 @@ public class AllTaskFragment extends Fragment {
                             editor.putString("taskendtime",taskendtime);
                             editor.putString("taskstartdate",taskstartdate);
                             editor.putString("taskid",taskid);
+                            editor.putString("taskstatus",taskstatus);
                             editor.apply();
                             startActivity(new Intent(getContext(), Outdoor.class));
 
                         }
+                        //for completed tasks show alert
+                        else if(tasktype.equalsIgnoreCase("outdoor task")&& taskstatus.equalsIgnoreCase("completed"))
+                        {
+                            AlertDialog.Builder b=  new  AlertDialog.Builder(getActivity())
+                                    .setTitle("You have completed this task!")
+                                    .setPositiveButton("OK",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    // do something...
+                                                    startActivity(new Intent(getActivity(), NavActivity.class));
+                                                }
+                                            }
+                                    )
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    dialog.dismiss();
+                                                }
+                                            }
+                                    );
+                            AlertDialog alertDialog=b.create();
+                            alertDialog.setTitle(taskheading);
+                            alertDialog.setMessage("You have completed this task !");
+                            alertDialog.setIcon(R.drawable.alltaskicon);
+                            alertDialog.show();
+
+
+
+                        }
+                        else if(tasktype.equalsIgnoreCase("indoor task")&& taskstatus.equalsIgnoreCase("completed"))
+                        {
+                            AlertDialog.Builder b=  new  AlertDialog.Builder(getActivity())
+                                    .setTitle("You have completed this task!")
+                                    .setPositiveButton("OK",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    // do something...
+                                                    startActivity(new Intent(getActivity(), NavActivity.class));
+                                                }
+                                            }
+                                    )
+                                    .setNegativeButton("Cancel",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    dialog.dismiss();
+                                                }
+                                            }
+                                    );
+                            AlertDialog alertDialog=b.create();
+                            alertDialog.setTitle(taskheading);
+                            alertDialog.setMessage("You have completed this task !");
+                            alertDialog.setIcon(R.drawable.alltaskicon);
+                            alertDialog.show();
+
+
+
+                        }
+
+
 
                         }
                     });
@@ -341,7 +408,14 @@ public class AllTaskFragment extends Fragment {
             holder.t_date.setText(datesperated.get(position));
 
             holder.starttime=(TextView)convertView.findViewById(R.id.textView_start_time);
-            holder.starttime.setText("Time : "+starttime_array.get(position)+" To "+endtime_array.get(position));
+            holder.starttime.setText(""+starttime_array.get(position)+"  To  "+endtime_array.get(position));
+
+            holder.status=(TextView)convertView.findViewById(R.id.textView_status);
+            String status=status_array.get(position);
+            if(status.equalsIgnoreCase("pending"))
+            holder.status.setText("Pending");
+          else  if(status.equalsIgnoreCase("completed"))
+                holder.status.setText("COMPLETED");
 
 
             return convertView;
@@ -354,6 +428,9 @@ public class AllTaskFragment extends Fragment {
             TextView t_month;
             TextView t_date;
             TextView starttime;
+            TextView status;
+
+
 
 
         }
